@@ -26,6 +26,7 @@ La aplicación está publicada con GitHub Pages:
 - Modo oscuro y modo claro.
 - Diseño responsive para escritorio, tablet y móvil.
 - Sección para proponer nuevos eventos a la comunidad.
+- Enlaces externos para consultar cada evento y abrir su ubicación en Google Maps.
 - Despliegue automático con GitHub Actions y GitHub Pages.
 - Metadatos SEO, Open Graph y Twitter Cards para compartir la web.
 - Datos estructurados Schema.org para la web y los eventos.
@@ -88,6 +89,11 @@ build y publica la carpeta `dist` en GitHub Pages.
 Actualmente se trata de un MVP con datos de ejemplo. Las próximas mejoras pueden
 incluir persistencia de eventos, integración con fuentes externas, formulario
 real de propuestas, calendario mensual y un mapa de ubicaciones.
+
+Los eventos de demostración enlazan a búsquedas públicas del evento y del recinto
+en Google para evitar publicar URLs inventadas. Cuando se incorporen eventos
+reales, cada ficha deberá sustituir esos destinos por la página oficial del
+organizador o por su inscripción.
 
 ## Licencia
 

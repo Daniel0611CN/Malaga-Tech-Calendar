@@ -32,19 +32,23 @@ type TechEvent = {
   venue: string
   description: string
   color: string
+  eventUrl: string
+  mapUrl: string
   featured?: boolean
 }
 
 const events: TechEvent[] = [
-  { id: 1, title: 'Málaga AI Week', category: 'IA', date: '2026-11-20', day: '20', month: 'NOV', time: '09:30 — 18:30', location: 'Málaga TechPark', venue: 'Edificio The Green Ray', description: 'Una jornada para descubrir cómo la inteligencia artificial está transformando nuestro día a día.', color: 'violet', featured: true },
-  { id: 2, title: 'Frontend Málaga #42', category: 'Desarrollo', date: '2026-11-12', day: '12', month: 'NOV', time: '18:30 — 20:30', location: 'La Farola', venue: 'Calle Comandante Benítez, 8', description: 'Comunidad, código y buenas conversaciones sobre el futuro de la web.', color: 'cyan' },
-  { id: 3, title: 'Startup Grind Málaga', category: 'Startups', date: '2026-11-25', day: '25', month: 'NOV', time: '19:00 — 21:00', location: 'The Pool', venue: 'Paseo de la Farola, 8', description: 'Conoce a las personas que están construyendo las próximas grandes ideas desde Málaga.', color: 'orange' },
-  { id: 4, title: 'GameLab Costa del Sol', category: 'Gaming', date: '2026-12-04', day: '04', month: 'DIC', time: '16:00 — 22:00', location: 'FYCMA', venue: 'Av. de José Ortega y Gasset, 201', description: 'Creadores, estudios y jugadores se encuentran para celebrar el talento local.', color: 'pink' },
-  { id: 5, title: 'CyberSec Sunset', category: 'Ciberseguridad', date: '2026-12-10', day: '10', month: 'DIC', time: '17:30 — 20:00', location: 'Málaga TechPark', venue: 'Auditorio Principal', description: 'Una charla práctica sobre seguridad, privacidad y amenazas emergentes.', color: 'green' },
+  { id: 1, title: 'Málaga AI Week', category: 'IA', date: '2026-11-20', day: '20', month: 'NOV', time: '09:30 — 18:30', location: 'Málaga TechPark', venue: 'Edificio The Green Ray', description: 'Una jornada para descubrir cómo la inteligencia artificial está transformando nuestro día a día.', color: 'violet', eventUrl: 'https://www.google.com/search?q=M%C3%A1laga+AI+Week', mapUrl: 'https://www.google.com/maps/search/?api=1&query=M%C3%A1laga+TechPark', featured: true },
+  { id: 2, title: 'Frontend Málaga #42', category: 'Desarrollo', date: '2026-11-12', day: '12', month: 'NOV', time: '18:30 — 20:30', location: 'La Farola', venue: 'Calle Comandante Benítez, 8', description: 'Comunidad, código y buenas conversaciones sobre el futuro de la web.', color: 'cyan', eventUrl: 'https://www.google.com/search?q=Frontend+M%C3%A1laga+meetup', mapUrl: 'https://www.google.com/maps/search/?api=1&query=La+Farola+M%C3%A1laga' },
+  { id: 3, title: 'Startup Grind Málaga', category: 'Startups', date: '2026-11-25', day: '25', month: 'NOV', time: '19:00 — 21:00', location: 'The Pool', venue: 'Paseo de la Farola, 8', description: 'Conoce a las personas que están construyendo las próximas grandes ideas desde Málaga.', color: 'orange', eventUrl: 'https://www.google.com/search?q=Startup+Grind+M%C3%A1laga', mapUrl: 'https://www.google.com/maps/search/?api=1&query=The+Pool+M%C3%A1laga' },
+  { id: 4, title: 'GameLab Costa del Sol', category: 'Gaming', date: '2026-12-04', day: '04', month: 'DIC', time: '16:00 — 22:00', location: 'FYCMA', venue: 'Av. de José Ortega y Gasset, 201', description: 'Creadores, estudios y jugadores se encuentran para celebrar el talento local.', color: 'pink', eventUrl: 'https://www.google.com/search?q=GameLab+Costa+del+Sol', mapUrl: 'https://www.google.com/maps/search/?api=1&query=FYCMA+M%C3%A1laga' },
+  { id: 5, title: 'CyberSec Sunset', category: 'Ciberseguridad', date: '2026-12-10', day: '10', month: 'DIC', time: '17:30 — 20:00', location: 'Málaga TechPark', venue: 'Auditorio Principal', description: 'Una charla práctica sobre seguridad, privacidad y amenazas emergentes.', color: 'green', eventUrl: 'https://www.google.com/search?q=Cybersecurity+M%C3%A1laga+eventos', mapUrl: 'https://www.google.com/maps/search/?api=1&query=M%C3%A1laga+TechPark' },
 ]
 
 const categories: Array<EventCategory | 'Todos'> = ['Todos', 'IA', 'Desarrollo', 'Startups', 'Gaming', 'Ciberseguridad']
 const siteUrl = 'https://daniel0611cn.github.io/malaga-tech-calendar/'
+const repositoryUrl = 'https://github.com/Daniel0611CN/malaga-tech-calendar'
+const proposalUrl = `${repositoryUrl}/issues/new?title=Propuesta%20de%20evento&body=Nombre%20del%20evento%3A%0A%0AFecha%3A%0A%0ALugar%3A%0A%0AEnlace%20oficial%3A%0A%0ADescripci%C3%B3n%3A`
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem('theme') !== 'light')
@@ -81,7 +85,7 @@ function App() {
       },
     },
     organizer: { '@type': 'Organization', name: 'Málaga Tech Calendar', url: siteUrl },
-    url: `${siteUrl}#evento-${event.id}`,
+    url: event.eventUrl,
     image: `${siteUrl}og-image.svg`,
   }))
 
@@ -91,7 +95,7 @@ function App() {
         {JSON.stringify({ '@context': 'https://schema.org', '@graph': eventSchema })}
       </script>
       <header className="topbar">
-        <a className="brand" href="#" aria-label="Málaga Tech Calendar">
+        <a className="brand" href={siteUrl} aria-label="Málaga Tech Calendar">
           <span className="brand-mark"><Command size={19} /></span>
           <span>Málaga<span className="brand-accent">.</span>Tech</span>
         </a>
@@ -104,7 +108,7 @@ function App() {
           <button className="icon-btn" onClick={() => setDarkMode(!darkMode)} aria-label={darkMode ? 'Activar modo claro' : 'Activar modo oscuro'} type="button">
             {darkMode ? <Sun size={18} /> : <Moon size={18} />}
           </button>
-          <button className="submit-btn" type="button">+ Proponer evento</button>
+          <a className="submit-btn" href={proposalUrl} target="_blank" rel="noreferrer">+ Proponer evento</a>
         </div>
       </header>
 
@@ -146,12 +150,18 @@ function App() {
         <section className="community" id="comunidad">
           <div className="community-icon"><Users size={24} /></div>
           <div><div className="section-kicker">PARA LA COMUNIDAD</div><h2>¿Organizas algo en Málaga?</h2><p>Ayuda a que nadie se pierda lo que está pasando. Publica tu próximo evento tech.</p></div>
-          <button className="outline-btn">Proponer un evento <ArrowUpRight size={16} /></button>
+          <a className="outline-btn" href={proposalUrl} target="_blank" rel="noreferrer">Proponer un evento <ArrowUpRight size={16} /></a>
+        </section>
+        <section className="about-section" id="sobre">
+          <div className="section-kicker">PROYECTO ABIERTO</div>
+          <h2>Una agenda creada para conectar Málaga.</h2>
+          <p>Este proyecto nace en el curso GitHub Devs de la UMA para dar visibilidad a la comunidad tecnológica local.</p>
+          <a className="text-btn" href={repositoryUrl} target="_blank" rel="noreferrer">Ver el código en GitHub <ExternalLink size={15} /></a>
         </section>
       </main>
-      <footer><span>© 2025 Málaga.Tech</span><span>Hecho con <span className="heart">♥</span> desde la Costa del Sol</span><span className="footer-links"><a href="#sobre">Instagram</a><a href="#sobre">GitHub</a></span></footer>
+      <footer><span>© 2026 Málaga.Tech</span><span>Hecho con <span className="heart">♥</span> desde la Costa del Sol</span><span className="footer-links"><a href={repositoryUrl} target="_blank" rel="noreferrer">GitHub</a><a href="https://www.uma.es/" target="_blank" rel="noreferrer">UMA</a></span></footer>
 
-      {selectedEvent && <div className="modal-backdrop" onClick={() => setSelectedEvent(null)}><div className="modal" role="dialog" aria-modal="true" aria-labelledby="event-dialog-title" onClick={(e) => e.stopPropagation()}><button className="modal-close" onClick={() => setSelectedEvent(null)} aria-label="Cerrar detalles" type="button"><X size={18} /></button><div className={`modal-banner ${selectedEvent.color}`}><span>{selectedEvent.category}</span><CalendarDays size={48} /></div><div className="modal-content"><div className="section-kicker">{selectedEvent.month} {selectedEvent.day} · {selectedEvent.time}</div><h2 id="event-dialog-title">{selectedEvent.title}</h2><p>{selectedEvent.description}</p><div className="modal-detail"><MapPin size={17} /><span><b>{selectedEvent.location}</b><small>{selectedEvent.venue}</small></span></div><div className="modal-detail"><Clock3 size={17} /><span><b>{selectedEvent.time}</b><small>Jueves, {selectedEvent.day} de {selectedEvent.month.toLowerCase()}</small></span></div><button className="primary-btn full" type="button">Ver página del evento <ExternalLink size={16} /></button></div></div></div>}
+      {selectedEvent && <div className="modal-backdrop" onClick={() => setSelectedEvent(null)}><div className="modal" role="dialog" aria-modal="true" aria-labelledby="event-dialog-title" onClick={(e) => e.stopPropagation()}><button className="modal-close" onClick={() => setSelectedEvent(null)} aria-label="Cerrar detalles" type="button"><X size={18} /></button><div className={`modal-banner ${selectedEvent.color}`}><span>{selectedEvent.category}</span><CalendarDays size={48} /></div><div className="modal-content"><div className="section-kicker">{selectedEvent.month} {selectedEvent.day} · {selectedEvent.time}</div><h2 id="event-dialog-title">{selectedEvent.title}</h2><p>{selectedEvent.description}</p><div className="modal-detail"><MapPin size={17} /><span><b>{selectedEvent.location}</b><small>{selectedEvent.venue}</small></span></div><div className="modal-detail"><Clock3 size={17} /><span><b>{selectedEvent.time}</b><small>Jueves, {selectedEvent.day} de {selectedEvent.month.toLowerCase()}</small></span></div><div className="modal-actions"><a className="primary-btn full" href={selectedEvent.eventUrl} target="_blank" rel="noreferrer">Buscar información del evento <ExternalLink size={16} /></a><a className="map-link" href={selectedEvent.mapUrl} target="_blank" rel="noreferrer"><MapPin size={15} /> Abrir ubicación en Google Maps</a></div></div></div></div>}
     </div>
   )
 }
