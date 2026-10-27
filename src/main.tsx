@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { createRoot } from 'react-dom/client'
 import {
   ArrowUpRight,
   CalendarDays,
@@ -129,3 +130,5 @@ function EventCard({ event, onClick }: { event: TechEvent; onClick: () => void }
 }
 
 export default App
+
+createRoot(document.getElementById('root')!).render(<App />)
