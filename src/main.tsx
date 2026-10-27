@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { loadAnalytics, setAnalyticsConsent, trackEvent } from './analytics'
 import {
   ArrowUpRight,
+  Bot,
   CalendarDays,
   ChevronDown,
   Clock3,
@@ -15,6 +16,7 @@ import {
   Search,
   Sparkles,
   Sun,
+  WandSparkles,
   Users,
   X,
 } from 'lucide-react'
@@ -56,6 +58,8 @@ function App() {
   const [activeCategory, setActiveCategory] = useState<EventCategory | 'Todos'>('Todos')
   const [search, setSearch] = useState('')
   const [selectedEvent, setSelectedEvent] = useState<TechEvent | null>(null)
+  const [mascotMessage, setMascotMessage] = useState('¡Hola! Soy Nubi, tu guía tech de Málaga.')
+  const [mascotMood, setMascotMood] = useState<'idle' | 'excited'>('idle')
   const [analyticsChoice, setAnalyticsChoice] = useState<boolean | null>(() => {
     const stored = localStorage.getItem('analytics-consent')
     return stored === 'granted' ? true : stored === 'denied' ? false : null
@@ -76,6 +80,22 @@ function App() {
     const query = search.toLowerCase()
     return matchesCategory && (!query || `${event.title} ${event.location} ${event.category}`.toLowerCase().includes(query))
   }), [activeCategory, search])
+
+  const mascotMessages = [
+    '¡Hola! Soy Nubi, tu guía tech de Málaga.',
+    '¿Buscas ideas? Prueba a filtrar por IA.',
+    'Psst... los mejores eventos empiezan con una conversación.',
+    '¡Haz clic en un evento y te cuento más!',
+    'Nubi recomienda: trae curiosidad y muchas preguntas.',
+  ]
+
+  const cheerMascot = () => {
+    const nextMessage = mascotMessages[Math.floor(Math.random() * mascotMessages.length)]
+    setMascotMessage(nextMessage)
+    setMascotMood('excited')
+    trackEvent('mascot_interaction', { message: nextMessage })
+    window.setTimeout(() => setMascotMood('idle'), 900)
+  }
 
   const eventSchema = events.map((event) => ({
     '@type': 'Event',
@@ -129,6 +149,7 @@ function App() {
             <div className="eyebrow"><span className="pulse" /> LA AGENDA TECH DE LA COSTA DEL SOL</div>
             <h1>Donde las ideas<br /><span>se conectan.</span></h1>
             <p>Descubre los eventos que están dando forma al futuro tecnológico de Málaga. Conecta, aprende y crea algo increíble.</p>
+            <div className="event-note"><WandSparkles size={15} /> Proyecto creado durante el evento <b>GitHub Devs de la UMA</b></div>
             <div className="hero-actions">
               <a className="primary-btn" href="#agenda">Explorar eventos <ArrowUpRight size={17} /></a>
               <a className="text-btn" href="#comunidad">Conoce la comunidad <ChevronDown size={16} /></a>
@@ -166,7 +187,7 @@ function App() {
         <section className="about-section" id="sobre">
           <div className="section-kicker">PROYECTO ABIERTO</div>
           <h2>Una agenda creada para conectar Málaga.</h2>
-          <p>Este proyecto nace en el curso GitHub Devs de la UMA para dar visibilidad a la comunidad tecnológica local.</p>
+          <p>Esta web se está construyendo en el evento <b>GitHub Devs de la UMA</b> para dar visibilidad a la comunidad tecnológica local y experimentar con nuevas formas de conectar personas e ideas.</p>
           <a className="text-btn" href={repositoryUrl} target="_blank" rel="noreferrer">Ver el código en GitHub <ExternalLink size={15} /></a>
         </section>
       </main>
@@ -176,6 +197,17 @@ function App() {
         <div className="footer-column"><strong>Enlaces</strong><a href={repositoryUrl} target="_blank" rel="noreferrer">GitHub <ExternalLink size={12} /></a><a href="https://www.uma.es/" target="_blank" rel="noreferrer">UMA <ExternalLink size={12} /></a><a href={proposalUrl} target="_blank" rel="noreferrer">Proponer evento <ExternalLink size={12} /></a></div>
         <div className="footer-bottom"><span>© 2026 Málaga Tech Calendar</span><span>Hecho con <span className="heart">♥</span> desde la Costa del Sol</span></div>
       </footer>
+
+      <div className={`mascot-wrap ${mascotMood}`}>
+        <div className="mascot-bubble">{mascotMessage}</div>
+        <button className="mascot" type="button" aria-label="Hablar con Nubi" onClick={cheerMascot}>
+          <span className="mascot-glow" />
+          <span className="mascot-antenna" />
+          <span className="mascot-face"><Bot size={29} /><i /><i /></span>
+          <span className="mascot-feet"><b /><b /></span>
+        </button>
+        <span className="mascot-hint">toca a Nubi</span>
+      </div>
 
       {analyticsChoice === null && <div className="consent-banner"><div><strong>¿Activamos las analíticas?</strong><p>Nos ayudan a saber qué secciones interesan más. Son opcionales y puedes cambiar tu decisión borrando las preferencias del navegador.</p></div><div className="consent-actions"><button className="consent-secondary" onClick={() => { setAnalyticsChoice(false); setAnalyticsConsent(false) }} type="button">Ahora no</button><button className="primary-btn" onClick={() => { setAnalyticsChoice(true); setAnalyticsConsent(true) }} type="button">Aceptar analíticas</button></div></div>}
 

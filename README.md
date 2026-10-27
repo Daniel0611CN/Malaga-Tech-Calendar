@@ -41,6 +41,7 @@ La aplicación está publicada con GitHub Pages:
 - GitHub Actions para integración y despliegue
 - GitHub Pages para publicación
 - Google Analytics 4 opcional, con consentimiento explícito
+- Mascota interactiva Nubi con mensajes contextuales y animaciones accesibles
 
 ## SEO y descubribilidad
 
@@ -117,6 +118,11 @@ Los eventos de demostración enlazan a búsquedas públicas del evento y del rec
 en Google para evitar publicar URLs inventadas. Cuando se incorporen eventos
 reales, cada ficha deberá sustituir esos destinos por la página oficial del
 organizador o por su inscripción.
+
+La interfaz también incluye a **Nubi**, una mascota interactiva que acompaña la
+navegación, ofrece pequeñas sugerencias y reacciona al hacer clic. La identidad
+del proyecto comunica que se está desarrollando durante el evento **GitHub Devs
+de la UMA**.
 
 ## Licencia
 
