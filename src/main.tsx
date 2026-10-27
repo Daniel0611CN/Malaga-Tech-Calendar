@@ -60,6 +60,7 @@ function App() {
   const [selectedEvent, setSelectedEvent] = useState<TechEvent | null>(null)
   const [mascotMessage, setMascotMessage] = useState('¡Hola! Soy Nubi, tu guía tech de Málaga.')
   const [mascotMood, setMascotMood] = useState<'idle' | 'excited'>('idle')
+  const [mascotInteraction, setMascotInteraction] = useState(0)
   const [analyticsChoice, setAnalyticsChoice] = useState<boolean | null>(() => {
     const stored = localStorage.getItem('analytics-consent')
     return stored === 'granted' ? true : stored === 'denied' ? false : null
@@ -73,6 +74,23 @@ function App() {
   useEffect(() => {
     loadAnalytics()
     trackEvent('page_view', { page_title: document.title })
+  }, [])
+
+  useEffect(() => {
+    let frame = 0
+    const handlePointerMove = (event: PointerEvent) => {
+      if (frame) return
+      frame = window.requestAnimationFrame(() => {
+        document.documentElement.style.setProperty('--pointer-x', `${event.clientX}px`)
+        document.documentElement.style.setProperty('--pointer-y', `${event.clientY}px`)
+        frame = 0
+      })
+    }
+    window.addEventListener('pointermove', handlePointerMove, { passive: true })
+    return () => {
+      window.removeEventListener('pointermove', handlePointerMove)
+      window.cancelAnimationFrame(frame)
+    }
   }, [])
 
   const filteredEvents = useMemo(() => events.filter((event) => {
@@ -93,6 +111,7 @@ function App() {
     const nextMessage = mascotMessages[Math.floor(Math.random() * mascotMessages.length)]
     setMascotMessage(nextMessage)
     setMascotMood('excited')
+    setMascotInteraction((current) => current + 1)
     trackEvent('mascot_interaction', { message: nextMessage })
     window.setTimeout(() => setMascotMood('idle'), 900)
   }
@@ -127,7 +146,7 @@ function App() {
       </script>
       <header className="topbar">
         <a className="brand" href={siteUrl} aria-label="Málaga Tech Calendar">
-          <span className="brand-mark"><Command size={19} /></span>
+          <img className="brand-logo" src={`${siteUrl}logo.svg`} alt="" />
           <span>Málaga<span className="brand-accent">.</span>Tech</span>
         </a>
         <nav className="nav-links">
@@ -174,7 +193,7 @@ function App() {
             <button className="filter-more"><Filter size={15} /> Más filtros</button>
           </div>
           <div className="event-grid">
-            {filteredEvents.map((event) => <EventCard key={event.id} event={event} onClick={() => setSelectedEvent(event)} />)}
+            {filteredEvents.map((event) => <EventCard key={event.id} event={event} onClick={() => setSelectedEvent(event)} onHover={() => { setMascotMessage(`¡${event.title}! Parece un planazo. Haz clic y te enseño los detalles.`); setMascotMood('excited') }} />)}
           </div>
           {filteredEvents.length === 0 && <div className="empty-state">No encontramos eventos con esos filtros. Prueba otra búsqueda.</div>}
         </section>
@@ -192,21 +211,23 @@ function App() {
         </section>
       </main>
       <footer>
-        <div className="footer-brand"><a className="brand" href={siteUrl}><span className="brand-mark"><Command size={17} /></span><span>Málaga<span className="brand-accent">.</span>Tech</span></a><p>El mapa vivo de la comunidad tecnológica de Málaga.</p></div>
+        <div className="footer-brand"><a className="brand" href={siteUrl}><img className="brand-logo" src={`${siteUrl}logo.svg`} alt="" /><span>Málaga<span className="brand-accent">.</span>Tech</span></a><p>El mapa vivo de la comunidad tecnológica de Málaga.</p></div>
         <div className="footer-column"><strong>Explora</strong><a href="#agenda">Eventos</a><a href="#comunidad">Comunidad</a><a href="#sobre">El proyecto</a></div>
         <div className="footer-column"><strong>Enlaces</strong><a href={repositoryUrl} target="_blank" rel="noreferrer">GitHub <ExternalLink size={12} /></a><a href="https://www.uma.es/" target="_blank" rel="noreferrer">UMA <ExternalLink size={12} /></a><a href={proposalUrl} target="_blank" rel="noreferrer">Proponer evento <ExternalLink size={12} /></a></div>
         <div className="footer-bottom"><span>© 2026 Málaga Tech Calendar</span><span>Hecho con <span className="heart">♥</span> desde la Costa del Sol</span></div>
       </footer>
 
-      <div className={`mascot-wrap ${mascotMood}`}>
+      <div className={`mascot-wrap ${mascotMood}`} key={mascotInteraction}>
         <div className="mascot-bubble">{mascotMessage}</div>
-        <button className="mascot" type="button" aria-label="Hablar con Nubi" onClick={cheerMascot}>
+        <div className="mascot-orbit orbit-a" />
+        <div className="mascot-orbit orbit-b" />
+        <button className="mascot" type="button" aria-label="Interactuar con Nubi" onClick={cheerMascot} onDoubleClick={() => { setMascotMessage('¡Modo fiesta activado! ✨'); setMascotMood('excited'); trackEvent('mascot_party') }}>
           <span className="mascot-glow" />
           <span className="mascot-antenna" />
-          <span className="mascot-face"><Bot size={29} /><i /><i /></span>
+          <span className="mascot-face"><Bot size={29} /><i /><i /><em /></span>
           <span className="mascot-feet"><b /><b /></span>
         </button>
-        <span className="mascot-hint">toca a Nubi</span>
+        <span className="mascot-hint">mueve el cursor · toca · doble clic</span>
       </div>
 
       {analyticsChoice === null && <div className="consent-banner"><div><strong>¿Activamos las analíticas?</strong><p>Nos ayudan a saber qué secciones interesan más. Son opcionales y puedes cambiar tu decisión borrando las preferencias del navegador.</p></div><div className="consent-actions"><button className="consent-secondary" onClick={() => { setAnalyticsChoice(false); setAnalyticsConsent(false) }} type="button">Ahora no</button><button className="primary-btn" onClick={() => { setAnalyticsChoice(true); setAnalyticsConsent(true) }} type="button">Aceptar analíticas</button></div></div>}
@@ -216,8 +237,8 @@ function App() {
   )
 }
 
-function EventCard({ event, onClick }: { event: TechEvent; onClick: () => void }) {
-  return <article className="event-card" id={`evento-${event.id}`} role="button" tabIndex={0} onClick={() => { onClick(); trackEvent('event_view', { event_name: event.title, category: event.category }) }} onKeyDown={(keyboardEvent) => { if (keyboardEvent.key === 'Enter' || keyboardEvent.key === ' ') { onClick(); trackEvent('event_view', { event_name: event.title, category: event.category }) } }}><div className={`event-visual ${event.color}`}><div className="date-badge"><strong>{event.day}</strong><span>{event.month}</span></div><div className="visual-icon">{event.category === 'IA' ? <Sparkles /> : event.category === 'Gaming' ? <Command /> : <Code2 />}</div>{event.featured && <span className="featured-tag">★ DESTACADO</span>}</div><div className="event-info"><div className="event-meta"><span className={`category-dot ${event.color}`} /> {event.category}<span className="meta-separator">·</span><span>{event.time}</span></div><h3>{event.title}</h3><div className="event-location"><MapPin size={14} /> {event.location}</div><div className="card-footer"><span>Ver detalles <ArrowUpRight size={14} /></span><span className="attendees"><Users size={14} /> 42+</span></div></div></article>
+function EventCard({ event, onClick, onHover }: { event: TechEvent; onClick: () => void; onHover: () => void }) {
+  return <article className="event-card" id={`evento-${event.id}`} role="button" tabIndex={0} onMouseEnter={onHover} onFocus={onHover} onClick={() => { onClick(); trackEvent('event_view', { event_name: event.title, category: event.category }) }} onKeyDown={(keyboardEvent) => { if (keyboardEvent.key === 'Enter' || keyboardEvent.key === ' ') { onClick(); trackEvent('event_view', { event_name: event.title, category: event.category }) } }}><div className={`event-visual ${event.color}`}><div className="date-badge"><strong>{event.day}</strong><span>{event.month}</span></div><div className="visual-icon">{event.category === 'IA' ? <Sparkles /> : event.category === 'Gaming' ? <Command /> : <Code2 />}</div>{event.featured && <span className="featured-tag">★ DESTACADO</span>}</div><div className="event-info"><div className="event-meta"><span className={`category-dot ${event.color}`} /> {event.category}<span className="meta-separator">·</span><span>{event.time}</span></div><h3>{event.title}</h3><div className="event-location"><MapPin size={14} /> {event.location}</div><div className="card-footer"><span>Ver detalles <ArrowUpRight size={14} /></span><span className="attendees"><Users size={14} /> 42+</span></div></div></article>
 }
 
 export default App

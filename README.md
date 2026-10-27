@@ -42,6 +42,7 @@ La aplicación está publicada con GitHub Pages:
 - GitHub Pages para publicación
 - Google Analytics 4 opcional, con consentimiento explícito
 - Mascota interactiva Nubi con mensajes contextuales y animaciones accesibles
+- Logo propio minimalista en SVG, reutilizable como favicon y marca de la aplicación
 
 ## SEO y descubribilidad
 
@@ -120,7 +121,9 @@ reales, cada ficha deberá sustituir esos destinos por la página oficial del
 organizador o por su inscripción.
 
 La interfaz también incluye a **Nubi**, una mascota interactiva que acompaña la
-navegación, ofrece pequeñas sugerencias y reacciona al hacer clic. La identidad
+navegación, sigue el movimiento del cursor con la mirada, reacciona al pasar por
+los eventos, ofrece pequeñas sugerencias y cambia de estado al hacer clic o doble
+clic. La identidad
 del proyecto comunica que se está desarrollando durante el evento **GitHub Devs
 de la UMA**.
 
