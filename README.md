@@ -40,6 +40,7 @@ La aplicación está publicada con GitHub Pages:
 - [Lucide React](https://lucide.dev/) para los iconos
 - GitHub Actions para integración y despliegue
 - GitHub Pages para publicación
+- Google Analytics 4 opcional, con consentimiento explícito
 
 ## SEO y descubribilidad
 
@@ -83,6 +84,28 @@ npm run preview  # Sirve localmente la build generada
 Cada cambio que llega a la rama `main` ejecuta automáticamente el workflow
 `.github/workflows/deploy.yml`. El workflow instala las dependencias, ejecuta la
 build y publica la carpeta `dist` en GitHub Pages.
+
+## Analíticas
+
+La aplicación incorpora una integración opcional con Google Analytics 4 para
+consultar visitas, búsquedas, filtros usados, temas y eventos abiertos. No carga
+el script ni envía datos hasta que la persona visitante acepta las analíticas.
+
+Para activarla:
+
+1. Crea una propiedad web en [Google Analytics](https://analytics.google.com/).
+2. Copia el identificador de medición, con formato `G-XXXXXXXXXX`.
+3. En GitHub, añade un secret o variable de Actions llamado
+   `VITE_GA_MEASUREMENT_ID` con ese valor.
+4. Añade esa variable al paso de build del workflow de Pages o configura un
+   entorno `.env.local` para desarrollo.
+
+En GitHub Analytics se consulta desde **Reports > Realtime** y, una vez haya
+datos, desde **Reports > Engagement > Events**. Los eventos personalizados
+incluyen `event_view`, `filter_selected`, `search` y `theme_changed`.
+
+Si no se configura el identificador, la web sigue funcionando normalmente y no
+se envía ninguna analítica.
 
 ## Estado del proyecto
 

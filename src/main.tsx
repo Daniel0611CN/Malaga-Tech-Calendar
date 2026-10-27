@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { createRoot } from 'react-dom/client'
+import { loadAnalytics, setAnalyticsConsent, trackEvent } from './analytics'
 import {
   ArrowUpRight,
   CalendarDays,
@@ -55,10 +56,20 @@ function App() {
   const [activeCategory, setActiveCategory] = useState<EventCategory | 'Todos'>('Todos')
   const [search, setSearch] = useState('')
   const [selectedEvent, setSelectedEvent] = useState<TechEvent | null>(null)
+  const [analyticsChoice, setAnalyticsChoice] = useState<boolean | null>(() => {
+    const stored = localStorage.getItem('analytics-consent')
+    return stored === 'granted' ? true : stored === 'denied' ? false : null
+  })
 
   useEffect(() => {
     localStorage.setItem('theme', darkMode ? 'dark' : 'light')
+    trackEvent('theme_changed', { theme: darkMode ? 'dark' : 'light' })
   }, [darkMode])
+
+  useEffect(() => {
+    loadAnalytics()
+    trackEvent('page_view', { page_title: document.title })
+  }, [])
 
   const filteredEvents = useMemo(() => events.filter((event) => {
     const matchesCategory = activeCategory === 'Todos' || event.category === activeCategory
@@ -105,7 +116,7 @@ function App() {
           <a href="#sobre">Sobre el proyecto</a>
         </nav>
         <div className="top-actions">
-          <button className="icon-btn" onClick={() => setDarkMode(!darkMode)} aria-label={darkMode ? 'Activar modo claro' : 'Activar modo oscuro'} type="button">
+          <button className="icon-btn" onClick={() => { setDarkMode(!darkMode); trackEvent('theme_toggle') }} aria-label={darkMode ? 'Activar modo claro' : 'Activar modo oscuro'} type="button">
             {darkMode ? <Sun size={18} /> : <Moon size={18} />}
           </button>
           <a className="submit-btn" href={proposalUrl} target="_blank" rel="noreferrer">+ Proponer evento</a>
@@ -137,8 +148,8 @@ function App() {
             <a className="view-all" href="#agenda">Ver todos los eventos <ArrowUpRight size={15} /></a>
           </div>
           <div className="toolbar">
-            <div className="search-box"><Search size={17} /><input aria-label="Buscar eventos" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Busca por evento, lugar o tema..." /></div>
-            <div className="filters">{categories.map((category) => <button key={category} className={activeCategory === category ? 'filter active' : 'filter'} onClick={() => setActiveCategory(category)}>{category}</button>)}</div>
+            <div className="search-box"><Search size={17} /><input aria-label="Buscar eventos" value={search} onChange={(e) => { setSearch(e.target.value); trackEvent('search', { query_length: e.target.value.length }) }} placeholder="Busca por evento, lugar o tema..." /></div>
+            <div className="filters">{categories.map((category) => <button key={category} className={activeCategory === category ? 'filter active' : 'filter'} onClick={() => { setActiveCategory(category); trackEvent('filter_selected', { category }) }}>{category}</button>)}</div>
             <button className="filter-more"><Filter size={15} /> Más filtros</button>
           </div>
           <div className="event-grid">
@@ -159,7 +170,14 @@ function App() {
           <a className="text-btn" href={repositoryUrl} target="_blank" rel="noreferrer">Ver el código en GitHub <ExternalLink size={15} /></a>
         </section>
       </main>
-      <footer><span>© 2026 Málaga.Tech</span><span>Hecho con <span className="heart">♥</span> desde la Costa del Sol</span><span className="footer-links"><a href={repositoryUrl} target="_blank" rel="noreferrer">GitHub</a><a href="https://www.uma.es/" target="_blank" rel="noreferrer">UMA</a></span></footer>
+      <footer>
+        <div className="footer-brand"><a className="brand" href={siteUrl}><span className="brand-mark"><Command size={17} /></span><span>Málaga<span className="brand-accent">.</span>Tech</span></a><p>El mapa vivo de la comunidad tecnológica de Málaga.</p></div>
+        <div className="footer-column"><strong>Explora</strong><a href="#agenda">Eventos</a><a href="#comunidad">Comunidad</a><a href="#sobre">El proyecto</a></div>
+        <div className="footer-column"><strong>Enlaces</strong><a href={repositoryUrl} target="_blank" rel="noreferrer">GitHub <ExternalLink size={12} /></a><a href="https://www.uma.es/" target="_blank" rel="noreferrer">UMA <ExternalLink size={12} /></a><a href={proposalUrl} target="_blank" rel="noreferrer">Proponer evento <ExternalLink size={12} /></a></div>
+        <div className="footer-bottom"><span>© 2026 Málaga Tech Calendar</span><span>Hecho con <span className="heart">♥</span> desde la Costa del Sol</span></div>
+      </footer>
+
+      {analyticsChoice === null && <div className="consent-banner"><div><strong>¿Activamos las analíticas?</strong><p>Nos ayudan a saber qué secciones interesan más. Son opcionales y puedes cambiar tu decisión borrando las preferencias del navegador.</p></div><div className="consent-actions"><button className="consent-secondary" onClick={() => { setAnalyticsChoice(false); setAnalyticsConsent(false) }} type="button">Ahora no</button><button className="primary-btn" onClick={() => { setAnalyticsChoice(true); setAnalyticsConsent(true) }} type="button">Aceptar analíticas</button></div></div>}
 
       {selectedEvent && <div className="modal-backdrop" onClick={() => setSelectedEvent(null)}><div className="modal" role="dialog" aria-modal="true" aria-labelledby="event-dialog-title" onClick={(e) => e.stopPropagation()}><button className="modal-close" onClick={() => setSelectedEvent(null)} aria-label="Cerrar detalles" type="button"><X size={18} /></button><div className={`modal-banner ${selectedEvent.color}`}><span>{selectedEvent.category}</span><CalendarDays size={48} /></div><div className="modal-content"><div className="section-kicker">{selectedEvent.month} {selectedEvent.day} · {selectedEvent.time}</div><h2 id="event-dialog-title">{selectedEvent.title}</h2><p>{selectedEvent.description}</p><div className="modal-detail"><MapPin size={17} /><span><b>{selectedEvent.location}</b><small>{selectedEvent.venue}</small></span></div><div className="modal-detail"><Clock3 size={17} /><span><b>{selectedEvent.time}</b><small>Jueves, {selectedEvent.day} de {selectedEvent.month.toLowerCase()}</small></span></div><div className="modal-actions"><a className="primary-btn full" href={selectedEvent.eventUrl} target="_blank" rel="noreferrer">Buscar información del evento <ExternalLink size={16} /></a><a className="map-link" href={selectedEvent.mapUrl} target="_blank" rel="noreferrer"><MapPin size={15} /> Abrir ubicación en Google Maps</a></div></div></div></div>}
     </div>
@@ -167,7 +185,7 @@ function App() {
 }
 
 function EventCard({ event, onClick }: { event: TechEvent; onClick: () => void }) {
-  return <article className="event-card" id={`evento-${event.id}`} role="button" tabIndex={0} onClick={onClick} onKeyDown={(keyboardEvent) => { if (keyboardEvent.key === 'Enter' || keyboardEvent.key === ' ') onClick() }}><div className={`event-visual ${event.color}`}><div className="date-badge"><strong>{event.day}</strong><span>{event.month}</span></div><div className="visual-icon">{event.category === 'IA' ? <Sparkles /> : event.category === 'Gaming' ? <Command /> : <Code2 />}</div>{event.featured && <span className="featured-tag">★ DESTACADO</span>}</div><div className="event-info"><div className="event-meta"><span className={`category-dot ${event.color}`} /> {event.category}<span className="meta-separator">·</span><span>{event.time}</span></div><h3>{event.title}</h3><div className="event-location"><MapPin size={14} /> {event.location}</div><div className="card-footer"><span>Ver detalles <ArrowUpRight size={14} /></span><span className="attendees"><Users size={14} /> 42+</span></div></div></article>
+  return <article className="event-card" id={`evento-${event.id}`} role="button" tabIndex={0} onClick={() => { onClick(); trackEvent('event_view', { event_name: event.title, category: event.category }) }} onKeyDown={(keyboardEvent) => { if (keyboardEvent.key === 'Enter' || keyboardEvent.key === ' ') { onClick(); trackEvent('event_view', { event_name: event.title, category: event.category }) } }}><div className={`event-visual ${event.color}`}><div className="date-badge"><strong>{event.day}</strong><span>{event.month}</span></div><div className="visual-icon">{event.category === 'IA' ? <Sparkles /> : event.category === 'Gaming' ? <Command /> : <Code2 />}</div>{event.featured && <span className="featured-tag">★ DESTACADO</span>}</div><div className="event-info"><div className="event-meta"><span className={`category-dot ${event.color}`} /> {event.category}<span className="meta-separator">·</span><span>{event.time}</span></div><h3>{event.title}</h3><div className="event-location"><MapPin size={14} /> {event.location}</div><div className="card-footer"><span>Ver detalles <ArrowUpRight size={14} /></span><span className="attendees"><Users size={14} /> 42+</span></div></div></article>
 }
 
 export default App
