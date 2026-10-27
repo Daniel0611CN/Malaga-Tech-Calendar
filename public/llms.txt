@@ -1,0 +1,22 @@
+# Málaga Tech Calendar
+
+> Agenda de eventos tecnológicos de Málaga y la Costa del Sol.
+
+## Sitio web
+
+- URL: https://daniel0611cn.github.io/malaga-tech-calendar/
+- Idioma principal: español
+- Tipo: calendario y directorio de eventos tecnológicos
+
+## Contenido
+
+La web reúne eventos de inteligencia artificial, desarrollo, startups, gaming y
+ciberseguridad. Cada evento puede mostrar su fecha, horario, ubicación, categoría
+y una descripción breve.
+
+## Proyecto
+
+Es un proyecto educativo desarrollado durante el curso GitHub Devs de la
+Universidad de Málaga (UMA). El código fuente está disponible en:
+
+- https://github.com/Daniel0611CN/malaga-tech-calendar

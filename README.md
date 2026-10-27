@@ -27,6 +27,9 @@ La aplicación está publicada con GitHub Pages:
 - Diseño responsive para escritorio, tablet y móvil.
 - Sección para proponer nuevos eventos a la comunidad.
 - Despliegue automático con GitHub Actions y GitHub Pages.
+- Metadatos SEO, Open Graph y Twitter Cards para compartir la web.
+- Datos estructurados Schema.org para la web y los eventos.
+- `robots.txt`, `sitemap.xml` y `llms.txt` publicados junto a la aplicación.
 
 ## Tecnología
 
@@ -36,6 +39,21 @@ La aplicación está publicada con GitHub Pages:
 - [Lucide React](https://lucide.dev/) para los iconos
 - GitHub Actions para integración y despliegue
 - GitHub Pages para publicación
+
+## SEO y descubribilidad
+
+La aplicación incluye una base SEO preparada para crecer:
+
+- Título, descripción, URL canónica e idioma en el documento HTML.
+- Open Graph y Twitter Cards con una imagen social propia.
+- Schema.org `WebSite`, `Organization` y `Event` para facilitar la indexación.
+- `robots.txt` con referencia al sitemap.
+- `sitemap.xml` para buscadores.
+- `llms.txt` con una descripción legible para herramientas de IA.
+
+Cuando el proyecto tenga una base de datos real de eventos, convendrá generar el
+sitemap y los datos estructurados desde el backend para reflejar automáticamente
+las nuevas fechas, organizadores y páginas de detalle.
 
 ## Ejecutar el proyecto en local
 
