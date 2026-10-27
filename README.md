@@ -19,6 +19,8 @@ La aplicación está publicada con GitHub Pages:
 ## Funcionalidades
 
 - Agenda visual con eventos tecnológicos de Málaga y la Costa del Sol.
+- Calendario mensual navegable para consultar qué ocurre cada día.
+- Selección de días con eventos y panel de horarios y ubicaciones.
 - Eventos destacados con fecha, horario, ubicación y categoría.
 - Búsqueda por nombre del evento, lugar o temática.
 - Filtros por IA, desarrollo, startups, gaming y ciberseguridad.

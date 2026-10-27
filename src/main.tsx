@@ -6,6 +6,8 @@ import {
   Bot,
   CalendarDays,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   Clock3,
   Code2,
   Command,
@@ -52,6 +54,8 @@ const categories: Array<EventCategory | 'Todos'> = ['Todos', 'IA', 'Desarrollo',
 const siteUrl = 'https://daniel0611cn.github.io/malaga-tech-calendar/'
 const repositoryUrl = 'https://github.com/Daniel0611CN/malaga-tech-calendar'
 const proposalUrl = `${repositoryUrl}/issues/new?title=Propuesta%20de%20evento&body=Nombre%20del%20evento%3A%0A%0AFecha%3A%0A%0ALugar%3A%0A%0AEnlace%20oficial%3A%0A%0ADescripci%C3%B3n%3A`
+const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
+const weekDays = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom']
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem('theme') !== 'light')
@@ -61,6 +65,8 @@ function App() {
   const [mascotMessage, setMascotMessage] = useState('¡Hola! Soy Nubi, tu guía tech de Málaga.')
   const [mascotMood, setMascotMood] = useState<'idle' | 'excited'>('idle')
   const [mascotInteraction, setMascotInteraction] = useState(0)
+  const [calendarDate, setCalendarDate] = useState(() => new Date(2026, 10, 1))
+  const [selectedDate, setSelectedDate] = useState('2026-11-20')
   const [analyticsChoice, setAnalyticsChoice] = useState<boolean | null>(() => {
     const stored = localStorage.getItem('analytics-consent')
     return stored === 'granted' ? true : stored === 'denied' ? false : null
@@ -98,6 +104,27 @@ function App() {
     const query = search.toLowerCase()
     return matchesCategory && (!query || `${event.title} ${event.location} ${event.category}`.toLowerCase().includes(query))
   }), [activeCategory, search])
+
+  const calendarDays = useMemo(() => {
+    const year = calendarDate.getFullYear()
+    const month = calendarDate.getMonth()
+    const firstDay = new Date(year, month, 1)
+    const offset = (firstDay.getDay() + 6) % 7
+    const daysInMonth = new Date(year, month + 1, 0).getDate()
+    return Array.from({ length: Math.ceil((offset + daysInMonth) / 7) * 7 }, (_, index) => {
+      const day = index - offset + 1
+      if (day < 1 || day > daysInMonth) return null
+      return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+    })
+  }, [calendarDate])
+
+  const calendarEvents = events.filter((event) => event.date.startsWith(`${calendarDate.getFullYear()}-${String(calendarDate.getMonth() + 1).padStart(2, '0')}`))
+  const selectedDayEvents = events.filter((event) => event.date === selectedDate)
+
+  const moveMonth = (amount: number) => {
+    setCalendarDate((current) => new Date(current.getFullYear(), current.getMonth() + amount, 1))
+    setSelectedDate('')
+  }
 
   const mascotMessages = [
     '¡Hola! Soy Nubi, tu guía tech de Málaga.',
@@ -191,6 +218,27 @@ function App() {
             <div className="search-box"><Search size={17} /><input aria-label="Buscar eventos" value={search} onChange={(e) => { setSearch(e.target.value); trackEvent('search', { query_length: e.target.value.length }) }} placeholder="Busca por evento, lugar o tema..." /></div>
             <div className="filters">{categories.map((category) => <button key={category} className={activeCategory === category ? 'filter active' : 'filter'} onClick={() => { setActiveCategory(category); trackEvent('filter_selected', { category }) }}>{category}</button>)}</div>
             <button className="filter-more"><Filter size={15} /> Más filtros</button>
+          </div>
+          <div className="calendar-layout">
+            <div className="calendar-panel">
+              <div className="calendar-header">
+                <div><div className="section-kicker">CALENDARIO MENSUAL</div><h3>{monthNames[calendarDate.getMonth()]} <span>{calendarDate.getFullYear()}</span></h3></div>
+                <div className="calendar-controls"><button type="button" aria-label="Mes anterior" onClick={() => moveMonth(-1)}><ChevronLeft size={17} /></button><button type="button" aria-label="Mes siguiente" onClick={() => moveMonth(1)}><ChevronRight size={17} /></button></div>
+              </div>
+              <div className="calendar-weekdays">{weekDays.map((day) => <span key={day}>{day}</span>)}</div>
+              <div className="calendar-grid">
+                {calendarDays.map((date, index) => {
+                  const dayEvent = date ? events.find((event) => event.date === date) : undefined
+                  return <button key={`${date ?? 'empty'}-${index}`} type="button" className={`calendar-day ${date === selectedDate ? 'selected' : ''} ${!date ? 'empty' : ''}`} disabled={!date} onClick={() => date && setSelectedDate(date)}>{date && <><strong>{Number(date.slice(-2))}</strong>{dayEvent && <span className={`calendar-dot ${dayEvent.color}`} title={`${dayEvent.title}: ${dayEvent.location}`} />}</>}</button>
+                })}
+              </div>
+              <div className="calendar-legend"><span><i className="calendar-dot violet" /> Día con eventos</span><span>{calendarEvents.length} eventos este mes</span></div>
+            </div>
+            <aside className="day-events">
+              <div className="section-kicker">{selectedDate ? new Date(`${selectedDate}T12:00:00`).toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }) : 'SELECCIONA UN DÍA'}</div>
+              <h3>{selectedDayEvents.length ? 'Eventos de este día' : 'Sin eventos todavía'}</h3>
+              {selectedDayEvents.length ? selectedDayEvents.map((event) => <button className="day-event" type="button" key={event.id} onClick={() => setSelectedEvent(event)}><span className={`day-event-icon ${event.color}`}><CalendarDays size={17} /></span><span><b>{event.title}</b><small><Clock3 size={12} /> {event.time}</small><small><MapPin size={12} /> {event.location}</small></span><ArrowUpRight size={15} /></button>) : <p>Explora otro día para descubrir los próximos encuentros de la comunidad.</p>}
+            </aside>
           </div>
           <div className="event-grid">
             {filteredEvents.map((event) => <EventCard key={event.id} event={event} onClick={() => setSelectedEvent(event)} onHover={() => { setMascotMessage(`¡${event.title}! Parece un planazo. Haz clic y te enseño los detalles.`); setMascotMood('excited') }} />)}
