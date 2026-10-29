@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://daniel0611cn.github.io/malaga-tech-calendar/sitemap.xml
+Sitemap: https://daniel0611cn.github.io/Malaga-Tech-Calendar/sitemap.xml

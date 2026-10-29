@@ -51,7 +51,7 @@ const events: TechEvent[] = [
 ]
 
 const categories: Array<EventCategory | 'Todos'> = ['Todos', 'IA', 'Desarrollo', 'Startups', 'Gaming', 'Ciberseguridad']
-const siteUrl = 'https://daniel0611cn.github.io/malaga-tech-calendar/'
+const siteUrl = 'https://daniel0611cn.github.io/Malaga-Tech-Calendar/'
 const repositoryUrl = 'https://github.com/Daniel0611CN/malaga-tech-calendar'
 const proposalUrl = `${repositoryUrl}/issues/new?title=Propuesta%20de%20evento&body=Nombre%20del%20evento%3A%0A%0AFecha%3A%0A%0ALugar%3A%0A%0AEnlace%20oficial%3A%0A%0ADescripci%C3%B3n%3A`
 const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']

@@ -2,7 +2,7 @@
 
 > El punto de encuentro para descubrir los eventos tecnológicos más interesantes de Málaga y la Costa del Sol.
 
-[![Ver la aplicación](https://img.shields.io/badge/Ver%20la%20web-malaga--tech--calendar-8068dc?style=for-the-badge)](https://daniel0611cn.github.io/malaga-tech-calendar/)
+[![Ver la aplicación](https://img.shields.io/badge/Ver%20la%20web-Malaga--Tech--Calendar-8068dc?style=for-the-badge)](https://daniel0611cn.github.io/Malaga-Tech-Calendar/)
 
 ## Sobre el proyecto
 
@@ -14,7 +14,7 @@ El proyecto se está realizando como parte del **curso GitHub Devs de la Univers
 
 La aplicación está publicada con GitHub Pages:
 
-**[https://daniel0611cn.github.io/malaga-tech-calendar/](https://daniel0611cn.github.io/malaga-tech-calendar/)**
+**[https://daniel0611cn.github.io/Malaga-Tech-Calendar/](https://daniel0611cn.github.io/Malaga-Tech-Calendar/)**
 
 ## Funcionalidades
 

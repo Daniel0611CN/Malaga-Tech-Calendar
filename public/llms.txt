@@ -4,7 +4,7 @@
 
 ## Sitio web
 
-- URL: https://daniel0611cn.github.io/malaga-tech-calendar/
+- URL: https://daniel0611cn.github.io/Malaga-Tech-Calendar/
 - Idioma principal: español
 - Tipo: calendario y directorio de eventos tecnológicos
 
