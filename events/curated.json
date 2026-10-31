@@ -1,0 +1,46 @@
+[
+  {
+    "id": "expo-agritech-2026",
+    "title": "Expo Agritech – Feria del Campo 4.0",
+    "category": "Otros",
+    "start": "2026-11-04T11:00:00Z",
+    "end": "2026-11-05T11:00:00Z",
+    "allDay": true,
+    "venue": "FYCMA – Palacio de Ferias y Congresos de Málaga",
+    "address": "Av. de José Ortega y Gasset, 201, 29006 Málaga",
+    "description": "Feria de tecnología, innovación y nuevas soluciones para un sector agrario más eficiente, sostenible y competitivo.",
+    "url": "https://www.fycma.com",
+    "source": "FYCMA · nota de prensa del Ayuntamiento de Málaga (4/09/2026)",
+    "note": "Horario y programa por confirmar en la web oficial."
+  },
+  {
+    "id": "malaga-sun-and-tech-2026",
+    "title": "Málaga Sun & Tech by Alhambra Venture",
+    "category": "Startups",
+    "start": "2026-11-18T11:00:00Z",
+    "end": "2026-11-19T11:00:00Z",
+    "allDay": true,
+    "venue": "FYCMA – Palacio de Ferias y Congresos de Málaga",
+    "address": "Av. de José Ortega y Gasset, 201, 29006 Málaga",
+    "description": "Cita de emprendimiento, innovación e inversión con zona expositiva y espacios de conexión entre proyectos, talento, empresas e inversores.",
+    "url": "https://www.fycma.com",
+    "source": "FYCMA · nota de prensa del Ayuntamiento de Málaga (4/09/2026)",
+    "organizer": "Alhambra Venture",
+    "note": "Horario y programa por confirmar en la web oficial."
+  },
+  {
+    "id": "talent-land-espana-2026",
+    "title": "Talent Land España",
+    "category": "Desarrollo",
+    "start": "2026-11-24T11:00:00Z",
+    "end": "2026-11-26T11:00:00Z",
+    "allDay": true,
+    "venue": "FYCMA – Palacio de Ferias y Congresos de Málaga",
+    "address": "Av. de José Ortega y Gasset, 201, 29006 Málaga",
+    "description": "Evento centrado en talento, creatividad, tecnología y nuevas generaciones del ecosistema digital.",
+    "url": "https://talent-land.es/",
+    "source": "FYCMA · nota de prensa del Ayuntamiento de Málaga (4/09/2026)",
+    "organizer": "Talent Network",
+    "note": "Fechas según la nota de prensa de FYCMA del 4/09/2026; antes se había anunciado para el 8-10 de julio. Confírmalo en talent-land.es."
+  }
+]
