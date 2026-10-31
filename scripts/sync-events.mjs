@@ -1,3 +1,4 @@
+/* global console, fetch */
 // Genera src/data/events.json desde feeds iCal (Meetup) + events/curated.json. Sin claves ni backend.
 import { readFileSync, writeFileSync } from 'node:fs'
 

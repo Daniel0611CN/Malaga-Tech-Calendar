@@ -3,6 +3,7 @@ import { X } from 'lucide-react'
 import { setAnalyticsConsent } from './analytics'
 
 type Doc = 'aviso' | 'privacidad' | 'cookies' | 'config'
+// eslint-disable-next-line react-refresh/only-export-components
 export const openLegal = (d: Doc) => window.dispatchEvent(new CustomEvent('legal:open', { detail: d }))
 const KEY = 'analytics-consent'
 const contact = 'mediante una incidencia en https://github.com/Daniel0611CN/Malaga-Tech-Calendar/issues'

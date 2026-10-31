@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 
 const S = 76
 const emit = (n: string, d: unknown) => window.dispatchEvent(new CustomEvent(n, { detail: d }))
+// eslint-disable-next-line react-refresh/only-export-components
 export const nubi = {
   say: (text: string) => emit('nubi:say', text),
   goto: (el: Element, text?: string) => emit('nubi:goto', { rect: el.getBoundingClientRect(), text }),
@@ -35,7 +36,8 @@ export default function Mascot() {
     const s = { mode: 'wander' as Mode, still: isStill() || reduced, last: Date.now(), px: innerWidth / 2, py: innerHeight / 2, pt: 0, hover: false, face: 1 }
     const p = { x: innerWidth + 80, y: corner().y, vx: 0, vy: 0 }
     const t = { ...corner() }
-    let timers: number[] = [], raf = 0, prev = performance.now(), drag: { sx: number; sy: number; moved: boolean } | null = null
+    const timers: number[] = []
+    let raf = 0, prev = performance.now(), drag: { sx: number; sy: number; moved: boolean } | null = null
 
     const later = (fn: () => void, ms: number) => { const id = window.setTimeout(fn, ms); timers.push(id); return id }
     const setMode = (m: Mode) => { s.mode = m }
